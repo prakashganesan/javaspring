@@ -8,7 +8,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Running build automation'
-                sh 'mvn clean package'
+                sh '/opt/apache-maven-3.2.5/bin/mvn clean package'
                 archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
         }
