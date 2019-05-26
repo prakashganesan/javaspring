@@ -9,7 +9,7 @@ pipeline {
             steps {
                 echo 'Running build automation'
                 sh '/opt/apache-maven-3.2.5/bin/mvn clean package'
-                archiveArtifacts artifacts: 'dist/trainSchedule.zip'
+                archiveArtifacts artifacts: 'target/*.jar'
             }
         }
         stage('Build Docker Image') {
