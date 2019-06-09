@@ -2,7 +2,8 @@ pipeline {
     agent any
     environment {
         //be sure to replace "willbla" with your own Docker Hub username
-        DOCKER_IMAGE_NAME = "prakashganesan/train-schedule"
+        DOCKER_IMAGE_NAME = "prakashganesan/javaspring"
+        CANARY_REPLICAS = 0
     }
     stages {
         stage('Build') {
@@ -14,7 +15,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             when {
-                branch 'master'
+                branch 'prod'
             }
             steps {
                 script {
@@ -27,7 +28,7 @@ pipeline {
         }
         stage('Push Docker Image') {
             when {
-                branch 'master'
+                branch 'prod'
             }
             steps {
                 script {
@@ -40,7 +41,7 @@ pipeline {
         }
         stage('CanaryDeploy') {
             when {
-                branch 'master'
+                branch 'prod'
             }
             environment { 
                 CANARY_REPLICAS = 1
@@ -53,12 +54,26 @@ pipeline {
                 )
             }
         }
+        stage('SmokeTest') {
+            when {
+                branch 'prod'
+            }
+            steps {
+                script {
+                    sleep (time: 60)
+                    def response = httpRequest (
+                        url: "http://$KUBE_MASTER_IP:30000",
+                        timeout: 30
+                    )
+                    if (response.status != 200) {
+                        error("Smoke test against canary deployment failed.")
+                    }
+                }
+            }
+        }
         stage('DeployToProduction') {
             when {
-                branch 'master'
-            }
-            environment { 
-                CANARY_REPLICAS = 0
+                branch 'prod'
             }
             steps {
                 input 'Deploy to Production?'
@@ -74,6 +89,15 @@ pipeline {
                     enableConfigSubstitution: true
                 )
             }
+        }
+    }
+    post {
+        cleanup {
+            kubernetesDeploy (
+                kubeconfigId: 'kubeconfig',
+                configs: 'train-schedule-kube-canary.yml',
+                enableConfigSubstitution: true
+            )
         }
     }
 }

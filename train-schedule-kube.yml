@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: train-schedule-service
+  name: train-schedule-prod-service
 spec:
   type: NodePort
   selector:
@@ -9,14 +9,14 @@ spec:
   ports:
   - protocol: TCP
     port: 8080
-    nodePort: 30001
+    nodePort: 30003
 
 ---
 
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: train-schedule-deployment
+  name: train-schedule-prod-deployment
   labels:
     app: train-schedule
 spec:
