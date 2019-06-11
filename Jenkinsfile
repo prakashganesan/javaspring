@@ -59,7 +59,7 @@ pipeline {
                 script {
                     sleep (time: 60)
                     def response = httpRequest (
-                        url: "http://$KUBE_MASTER_IP:30000",
+                        url: "http://$KUBE_MASTER_IP:30005",
                         timeout: 30
                     )
                     if (response.status != 200) {
@@ -75,23 +75,15 @@ pipeline {
             steps {
                 input 'Deploy to Production?'
                 milestone(1)
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'train-schedule-kube-canary.yml',
-                    enableConfigSubstitution: true
-                )
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'train-schedule-kube.yml',
-                    enableConfigSubstitution: true
-                )
+                sh '/usr/local/bin/helm repo update'
+                sh '/usr/local/bin/helm upgrade --install prodapp javaspring/prodapp --tls'
             }
         }
     }
     post {
         cleanup {
             sh '/usr/local/bin/helm repo update'
-            sh '/usr/local/bin/helm delete --purge codecanary --tls'
+            sh '/usr/local/bin/helm delete --purge nodecanary --tls'
         }
     }
 }
