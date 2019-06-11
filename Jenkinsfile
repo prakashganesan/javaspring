@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             when {
-                branch 'prod'
+                branch 'master'
             }
             steps {
                 script {
@@ -28,7 +28,7 @@ pipeline {
         }
         stage('Push Docker Image') {
             when {
-                branch 'prod'
+                branch 'master'
             }
             steps {
                 script {
@@ -41,7 +41,7 @@ pipeline {
         }
         stage('CanaryDeploy') {
             when {
-                branch 'prod'
+                branch 'master'
             }
             environment { 
                 CANARY_REPLICAS = 1
@@ -56,7 +56,7 @@ pipeline {
         }
         stage('SmokeTest') {
             when {
-                branch 'prod'
+                branch 'master'
             }
             steps {
                 script {
@@ -73,7 +73,7 @@ pipeline {
         }
         stage('DeployToProduction') {
             when {
-                branch 'prod'
+                branch 'master'
             }
             steps {
                 input 'Deploy to Production?'
