@@ -47,8 +47,11 @@ pipeline {
                 CANARY_REPLICAS = 1
             }
             steps {
-                sh 'helm repo update'
-                sh 'helm upgrade --install codecanary codecanary --tls'
+                kubernetesDeploy(
+                    kubeconfigId: 'kubeconfig',
+                    configs: 'train-schedule-kube-canary.yml',
+                    enableConfigSubstitution: true
+                )
             }
         }
         stage('SmokeTest') {
@@ -90,8 +93,11 @@ pipeline {
     }
     post {
         cleanup {
-            sh 'helm repo update'
-            sh 'helm delete --purge codecanary --tls'
+            kubernetesDeploy (
+                kubeconfigId: 'kubeconfig',
+                configs: 'train-schedule-kube-canary.yml',
+                enableConfigSubstitution: true
+            )
         }
     }
 }
