@@ -48,7 +48,7 @@ pipeline {
             }
             steps {
                 sh '/usr/local/bin/helm repo update'
-                sh '/usr/local/bin/helm upgrade --install codecanary codecanary --tls'
+                sh '/usr/local/bin/helm upgrade --install nodecanary javaspring/nodecanary --tls'
             }
         }
         stage('SmokeTest') {
