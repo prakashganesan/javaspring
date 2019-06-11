@@ -47,8 +47,8 @@ pipeline {
                 CANARY_REPLICAS = 1
             }
             steps {
-                sh 'helm repo update'
-                sh 'helm upgrade --install codecanary codecanary --tls'
+                sh '/usr/local/bin/helm repo update'
+                sh '/usr/local/bin/helm upgrade --install codecanary codecanary --tls'
             }
         }
         stage('SmokeTest') {
@@ -90,8 +90,8 @@ pipeline {
     }
     post {
         cleanup {
-            sh 'helm repo update'
-            sh 'helm delete --purge codecanary --tls'
+            sh '/usr/local/bin/helm repo update'
+            sh '/usr/local/bin/helm delete --purge codecanary --tls'
         }
     }
 }
