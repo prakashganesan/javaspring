@@ -59,7 +59,7 @@ pipeline {
                 script {
                     sleep (time: 60)
                     def response = httpRequest (
-                        url: "http://$KUBE_MASTER_IP",
+                        url: "http://$KUBE_MASTER_IP/canary",
                         timeout: 30
                     )
                     if (response.status != 200) {
