@@ -48,7 +48,7 @@ pipeline {
             }
             steps {
                 sh '/usr/local/bin/helm repo update'
-                sh '/usr/local/bin/helm upgrade --install --set image.tag=$BUILD_NUMBER canaryingress javaspring/springcanary --tls'
+                sh '/usr/local/bin/helm upgrade --install --set image.tag=$BUILD_NUMBER nodecanary javaspring/nodecanary --tls'
             }
         }
         stage('SmokeTest') {
@@ -83,7 +83,7 @@ pipeline {
     post {
         cleanup {
             sh '/usr/local/bin/helm repo update'
-            sh '/usr/local/bin/helm delete --purge canaryingress --tls'
+            sh '/usr/local/bin/helm delete --purge nodecanary --tls'
         }
     }
 }
