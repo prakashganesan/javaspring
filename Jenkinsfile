@@ -76,7 +76,7 @@ pipeline {
                 input 'Deploy to Production?'
                 milestone(1)
                 sh '/usr/local/bin/helm repo update'
-                sh '/usr/local/bin/helm upgrade --install prodapp javaspring/prodapp --tls'
+                sh '/usr/local/bin/helm upgrade --install --set image.tag=$BUILD_NUMBER prodapp javaspring/springcanary --tls'
             }
         }
     }
