@@ -57,7 +57,7 @@ pipeline {
             }
             steps {
                 script {
-                    sleep (time: 60)
+                    sleep (time: 30)
                     def response = httpRequest (
                         url: "http://$KUBE_MASTER_IP/canary",
                         timeout: 30
