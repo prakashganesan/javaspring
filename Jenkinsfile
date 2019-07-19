@@ -76,13 +76,12 @@ pipeline {
                 input 'Deploy to Production?'
                 milestone(1)
                 sh '/usr/local/bin/helm repo update'
-                sh '/usr/local/bin/helm upgrade --install --set image.tag=$BUILD_NUMBER prodapp javaspring/springcanary --tls'
+                sh '/usr/local/bin/helm upgrade --install --set image.tag=$BUILD_NUMBER prodapp javaspring/springprod --tls'
             }
         }
     }
     post {
         cleanup {
-            sh '/usr/local/bin/helm repo update'
             sh '/usr/local/bin/helm delete --purge canaryingress --tls'
         }
     }
